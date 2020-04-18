@@ -229,9 +229,6 @@ void your_histogram_and_prefixsum(const float* const d_logLuminance,
   h_max = (float *)malloc(sizeof(float));
   checkCudaErrors(cudaMemcpy(h_max, d_max, sizeof(float), cudaMemcpyDeviceToHost));
   printf("%f\n", *h_max);
-  
-  min_logLum = *h_min;
-  max_logLum = *h_max;
 
   // calc range
   float logLum_range = *h_max - *h_min;
@@ -256,7 +253,7 @@ void your_histogram_and_prefixsum(const float* const d_logLuminance,
   // cdf
   cdf_kernel<<<1, (int)(numBins/2), numBins*sizeof(unsigned int)>>>(d_cdf);
   cudaDeviceSynchronize(); checkCudaErrors(cudaGetLastError());
-  
+   
   unsigned int* h_cdf;
   h_cdf = (unsigned int *)malloc(sizeof(unsigned int)*numBins);
   checkCudaErrors(cudaMemcpy(h_cdf, d_cdf, sizeof(unsigned int)*numBins, cudaMemcpyDeviceToHost));
